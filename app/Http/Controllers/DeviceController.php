@@ -16,7 +16,7 @@ class DeviceController extends Controller
   public function index(Request $request)
   {
     $devices = auth()->user()->devices()->get();
-    return view('device.index', compact($devices));
+    return view('device.index', compact('devices'));
   }
 
   /**

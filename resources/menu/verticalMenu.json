@@ -19,6 +19,12 @@
       "slug": "devices"
     },
     {
+      "url": "/recommend",
+      "name": "Recommend",
+      "icon": "menu-icon tf-icons bx bx-mobile",
+      "slug": "recommend"
+    },
+    {
       "menuHeader": "Pages"
     }
   ]

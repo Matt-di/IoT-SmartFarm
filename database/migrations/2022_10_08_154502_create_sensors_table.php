@@ -17,7 +17,7 @@ return new class extends Migration
       $table->uuid('id')->primary();
       $table->foreignUuid('device_id');
       $table->float('moisture')->default(0);
-      $table->float('tempserature')->default(0);
+      $table->float('temperature')->default(0);
       $table->float('humidity')->default(0);
       $table->float('water_level')->default(0);
       $table->enum('motor_status', ['opened', 'closed'])->default('closed');

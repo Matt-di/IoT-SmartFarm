@@ -13,9 +13,7 @@ class Sensor extends Model
 
   protected $fillable = [
     'id',
-    'user_id',
-    'name',
-    'server_name',
+    'device_id',
     'moisture',
     'temperature',
     'humidity',

@@ -10,313 +10,242 @@
 
 @endsection
 @section('page-script')
+
     <script>
-        jQuery(document).ready(function() {
+        var lastDate = 0;
+        var datas = {
 
-            let cardColor, headingColor, axisColor, shadeColor, borderColor;
+        }
+        var data = []
+        var data2 = []
+        var data3 = []
+        var year = []
 
-            cardColor = config.colors.white;
-            headingColor = config.colors.headingColor;
-            axisColor = config.colors.axisColor;
-            borderColor = config.colors.borderColor;
-            console.log("{{$devices}}")
-            // --------------------------------------------------------------------
-            const graphData = document.querySelector("#graphData1"),
-                totalRevenueChartOptions = {
+        function getNewSeries2(deviceId) {
+            $.ajax({
+                url: "/api/device/" + deviceId + "/sensor",
+                method: "get",
+                success: function(result) {
+                    // console.log(result.humidity);
+                    datas[deviceId] = result;
+                    data = result.temperature;
+                    data2 = result.humidity;
+                    data3 = result.moisture
+                    year = result.date;
+                    console.log(result)
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+    <script>
+        @php
+            $idGen = 1;
+        @endphp
+        @foreach ($devices as $device)
+            jQuery(document).ready(function() {
+                datas["{{ $device->id }}"] = [];
+                let cardColor, headingColor, axisColor, shadeColor, borderColor;
+
+                cardColor = config.colors.white;
+                headingColor = config.colors.headingColor;
+                axisColor = config.colors.axisColor;
+                borderColor = config.colors.borderColor;
+
+                // --------------------------------------------------------------------
+                let graphData = document.querySelector("{{ '#graphData' . $idGen }}");
+                var options = {
                     series: [{
                             name: "Temperature",
-                            data: [18, 7, 15, 29, 18, 12, 9],
+                            data: data
                         },
                         {
                             name: "Humidity",
-                            data: [-13, -18, -9, -14, -5, -17, -15],
+                            data: data2
                         },
                         {
-                            name: "Moisture",
-                            data: [23, -12, -1, -24, -5, 17, 15],
-                        },
+                            name: "Soil Moisture",
+                            data: data3
+                        }
                     ],
                     chart: {
-                        height: 300,
-                        stacked: true,
-                        type: "bar",
+                        height: 350,
+                        type: 'line',
+                        dropShadow: {
+                            enabled: true,
+                            color: '#000',
+                            top: 18,
+                            left: 7,
+                            blur: 10,
+                            opacity: 0.2
+                        },
+                        animations: {
+                            enabled: true,
+                            easing: 'linear',
+                            dynamicAnimation: {
+                                speed: 1000
+                            }
+                        },
                         toolbar: {
                             show: false
-                        },
+                        }
                     },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            columnWidth: "33%",
-                            borderRadius: 12,
-                            startingShape: "rounded",
-                            endingShape: "rounded",
-                        },
-                    },
-                    colors: [
-                        config.colors.primary,
-                        config.colors.info,
-                        config.colors.success,
-                    ],
+                    colors: ['#FF0000', '#545454', '#00FF00'],
                     dataLabels: {
                         enabled: false,
                     },
                     stroke: {
-                        curve: "smooth",
-                        width: 6,
-                        lineCap: "round",
-                        colors: [cardColor],
+                        curve: 'smooth'
                     },
-                    legend: {
-                        show: true,
-                        horizontalAlign: "left",
-                        position: "top",
-                        markers: {
-                            height: 8,
-                            width: 8,
-                            radius: 12,
-                            offsetX: -3,
-                        },
-                        labels: {
-                            colors: axisColor,
-                        },
-                        itemMargin: {
-                            horizontal: 10,
-                        },
+                    title: {
+                        text: 'Dettail Data',
+                        align: 'left'
                     },
                     grid: {
-                        borderColor: borderColor,
-                        padding: {
-                            top: 0,
-                            bottom: -8,
-                            left: 20,
-                            right: 20,
+                        borderColor: '#e7e7e7',
+                        row: {
+                            colors: ['#f3f3f3',
+                                'transparent'
+                            ], // takes an array which will be repeated on columns
+                            opacity: 0.5
                         },
+                    },
+                    markers: {
+                        size: 1
                     },
                     xaxis: {
-                        categories: [
-                            "12:00",
-                            "12:01",
-                            "12:02",
-                            "12:04",
-                            "12:05",
-                            "12:08",
-                            "12:09",
-                        ],
-                        labels: {
-                            style: {
-                                fontSize: "13px",
-                                colors: axisColor,
-                            },
-                        },
-                        axisTicks: {
-                            show: false,
-                        },
-                        axisBorder: {
-                            show: false,
-                        },
+                        categories: [],
+                        title: {
+                            text: 'Date'
+                        }
                     },
                     yaxis: {
-                        labels: {
-                            style: {
-                                fontSize: "13px",
-                                colors: axisColor,
-                            },
+                        title: {
+                            text: 'Value'
                         },
+                        min: 0,
+                        max: 100
                     },
-                    responsive: [{
-                            breakpoint: 1700,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "32%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 1580,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "35%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 1440,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "42%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 1300,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "48%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 1200,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "40%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 1040,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 11,
-                                        columnWidth: "48%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 991,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "30%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 840,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "35%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 768,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "28%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 640,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "32%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 576,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "37%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 480,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "45%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 420,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "52%",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            breakpoint: 380,
-                            options: {
-                                plotOptions: {
-                                    bar: {
-                                        borderRadius: 10,
-                                        columnWidth: "60%",
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                    states: {
-                        hover: {
-                            filter: {
-                                type: "none",
-                            },
-                        },
-                        active: {
-                            filter: {
-                                type: "none",
-                            },
-                        },
-                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'right',
+                        floating: true,
+                        offsetY: -25,
+                        offsetX: -5
+                    }
                 };
-            if (
-                typeof graphData !== undefined &&
-                graphData !== null
-            ) {
-                const totalRevenueChart = new ApexCharts(
-                    graphData,
-                    totalRevenueChartOptions
-                );
-                totalRevenueChart.render();
-            }
+
+
+
+                if (
+                    typeof graphData !== undefined &&
+                    graphData !== null
+                ) {
+                    window["{{ 'totalRevenueChart' . $idGen }}"] = new ApexCharts(
+                        graphData,
+                        options
+                    );
+                    window["{{ 'totalRevenueChart' . $idGen }}"].render();
+
+
+                    // cons ole.log(totalRevenueChart.getSeriesTotal())
+
+                }
+                window.setInterval(function() {
+                    getNewSeries2("{{ $device->id }}");
+                    window["{{ 'totalRevenueChart' . $idGen }}"].updateOptions({
+                        series: [{
+                                name: "Temperature",
+                                data: datas["{{ $device->id }}"].temperature
+                            },
+                            {
+                                name: "humidity",
+
+                                data: datas["{{ $device->id }}"].humidity
+                            }, {
+                                name: "Soil Moisture",
+
+                                data: datas["{{ $device->id }}"].moisture
+                            }
+                        ],
+                        xaxis: {
+                            categories: datas["{{ $device->id }}"].date
+                        }
+                    })
+                }, 5000);
+            });
+            @php
+                $idGen += 1;
+            @endphp
+        @endforeach
+
+
+        jQuery(document).ready(function() {
+
+            $('.updateMotor').on('click', function(event) {
+                let elment = $(this);
+                let deviceId = $(this).attr('id');
+                let prevElm = $("#" + deviceId).prev();
+                let data = {
+                    "motor_status": $(this).attr('motor') == "closed" ? "opened" : "closed"
+                };
+                event.preventDefault();
+                $.ajax({
+                    url: "/api/device/" + deviceId + "/toggle",
+                    method: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        console.log(result);
+                        prevElm.text(result)
+                        elment.attr('motor', result)
+
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+            $('.updateMode').on('click', function(event) {
+                let elment = $(this);
+                let deviceId = $(this).attr('id');
+                let prevElm = elment.prev();
+                let data = {
+                    "control_mode": $(this).attr('mode') == "auto" ? "user" : "auto"
+                };
+                event.preventDefault();
+                $.ajax({
+                    url: "/api/device/" + deviceId.substr(5) + "/setting",
+                    method: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        console.log(result);
+                        prevElm.text(result[0]['control_mode'])
+                        elment.attr('mode', result[0]['control_mode'])
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
         });
     </script>
     {{-- <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script> --}}
 @endsection
 @section('content')
+
     @php
         $idGen = 1;
     @endphp
     <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
-        <div class="card">
-
-            @foreach ($devices as $device)
+        @foreach ($devices as $device)
+            <div class="card">
                 <div class="row row-bordered g-0">
                     <div class="col-md-8">
-                        <h5 class="card-header m-0 me-2 pb-3">De</h5>
+                        <h5 class="card-header m-0 me-2 pb-3">{{ $device->name }}</h5>
                         <div id="graphData{{ $idGen }}" class=" px-2"></div>
                     </div>
                     <div class="col-md-4">
@@ -324,10 +253,10 @@
                             <div class="col-6 mb-4">
                                 <div class="card">
                                     <div class="card-body">
-
                                         <span class="fw-semibold d-block mb-1">Motor Status</span>
-                                        <h3 class="card-title mb-2">{{ $device->motor_status }}</h3>
-                                        <button class="btn btn-primary"> Open
+                                        <h3 class="card-title mb-2 ">{{ $device->motor_status }}</h3>
+                                        <button class="btn btn-primary updateMotor" motor="{{ $device->motor_status }}"
+                                            id="{{ $device->id }}"> Toggle
                                         </button>
                                         <small class="text-success fw-semibold"></small>
                                     </div>
@@ -338,7 +267,8 @@
                                     <div class="card-body">
                                         <span class="fw-semibold d-block mb-1">Control Mode</span>
                                         <h3 class="card-title mb-2">{{ $device->setting()->first()->control_mode }}</h3>
-                                        <button class="btn btn-primary"> Change
+                                        <button class="btn btn-primary updateMode" id="mode_{{ $device->id }}"
+                                            mode="{{ $device->setting()->first()->control_mode }}"> Change
                                         </button>
                                         <small class="text-success fw-semibold"></small>
                                     </div>
@@ -346,14 +276,76 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     @php
                         $idGen += 1;
                     @endphp
-            @endforeach
 
-        </div>
-    </div>
-    <hr>
+                </div>
+            </div>
+            <hr>
+        @endforeach
 
-@endsection
+        <script>
+            var options = {
+                series: [{
+                    data: data.slice()
+                }],
+                chart: {
+                    id: 'realtime',
+                    height: 350,
+                    type: 'line',
+                    animations: {
+                        enabled: true,
+                        easing: 'linear',
+                        dynamicAnimation: {
+                            speed: 1000
+                        }
+                    },
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                title: {
+                    text: 'Dynamic Updating Chart',
+                    align: 'left'
+                },
+                markers: {
+                    size: 0
+                },
+                xaxis: {
+                    type: 'datetime',
+                    range: XAXISRANGE,
+                },
+                yaxis: {
+                    max: 100
+                },
+                legend: {
+                    show: false
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+
+
+            window.setInterval(function() {
+                getNewSeries(lastDate, {
+                    min: 10,
+                    max: 90
+                })
+
+                chart.updateSeries([{
+                    data: data
+                }])
+            }, 1000)
+        </script>
+    @endsection
