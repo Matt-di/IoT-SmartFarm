@@ -9,10 +9,10 @@
       Smart Farm
     </div>
     <div>
-      <a href="{{ config('variables.licenseUrl') ? config('variables.licenseUrl') : '#' }}" class="footer-link me-4" target="_blank">Contact Us</a>
-      <a href="{{ config('variables.moreThemes') ? config('variables.moreThemes') : '#' }}" target="_blank" class="footer-link me-4">Morex</a>
-      <a href="{{ config('variables.documentation') ? config('variables.documentation') : '#' }}" target="_blank" class="footer-link me-4">Get informatio</a>
-      <a href="{{ config('variables.support') ? config('variables.support') : '#' }}" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+      <a href="#" class="footer-link me-4" target="_blank">Contact Us</a>
+      <a href="#" target="_blank" class="footer-link me-4">Morex</a>
+      <a href="#" target="_blank" class="footer-link me-4">Get informatio</a>
+      <a href="#" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
     </div>
   </div>
 </footer>

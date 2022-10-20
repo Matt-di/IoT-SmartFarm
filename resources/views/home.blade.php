@@ -217,7 +217,7 @@
                 };
                 event.preventDefault();
                 $.ajax({
-                    url: "/api/device/" + deviceId.substr(5) + "/setting",
+                    url: "/api/device/" + deviceId.substr(5) + "/toggleMode",
                     method: "POST",
                     dataType: "json",
                     data: JSON.stringify(data),

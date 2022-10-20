@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/devices', [DeviceController::class, 'index']);
 Route::post('/device/{device}/toggle', [DeviceController::class, 'toggleMotor']);
+Route::post('/device/{device}/toggleMode', [DeviceController::class, 'toggleMode']);
 Route::get('/device/{device}/setting', [DeviceController::class, 'setting']);
 Route::post('/device/{device}/setting', [DeviceController::class, 'updateSetting']);
 

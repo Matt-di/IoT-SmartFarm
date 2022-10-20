@@ -15,7 +15,7 @@ class SensorController extends Controller
    */
   public function index(Device $device)
   {
-    return view('sensor.index',['sensors'=>$device->sensors()->get()]);
+    return view('sensor.index',['sensors'=>$device->sensors()->paginate(10)]);
   }
 
   /**

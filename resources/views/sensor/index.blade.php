@@ -89,20 +89,24 @@
                 </table>
             </div>
         </div>
-        <!--/ Basic Bootstrap Table -->
-    @else
-        <div class="container-xxl container-p-y">
-            <div class="misc-wrapper">
-                <h2 class="mb-2 mx-2">No Added sensor yet!</h2>
-                <p class="mb-4 mx-2">
-                    Please add your sensor to start your smart sensors </p>
-                <a href="{{ route('sensors.create') }}" class="btn btn-primary">Add sensor <i class="bx bx-plus"></i></a>
-                <div class="mt-4">
-                    <img src="{{ asset('assets/img/illustrations/girl-doing-yoga-light.png') }}"
-                        alt="girl-doing-yoga-light" width="500" class="img-fluid">
+<hr>
+        <div >{{ $sensors->links() }}
+        </div>
+            <!--/ Basic Bootstrap Table -->
+        @else
+            <div class="container-xxl container-p-y">
+                <div class="misc-wrapper">
+                    <h2 class="mb-2 mx-2">No Added sensor yet!</h2>
+                    <p class="mb-4 mx-2">
+                        Please add your sensor to start your smart sensors </p>
+                    <a href="{{ route('sensors.create') }}" class="btn btn-primary">Add sensor <i
+                            class="bx bx-plus"></i></a>
+                    <div class="mt-4">
+                        <img src="{{ asset('assets/img/illustrations/girl-doing-yoga-light.png') }}"
+                            alt="girl-doing-yoga-light" width="500" class="img-fluid">
+                    </div>
                 </div>
             </div>
-        </div>
     @endif
 
 

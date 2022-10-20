@@ -25,7 +25,7 @@ class DeviceController extends Controller
 
   public function data(Device $device)
   {
-    $sensors = $device->sensors()->orderBy('created_at','ASC')->get();
+    $sensors = $device->sensors()->orderBy('created_at', 'DESC')->take(10)->get()->reverse();
     $data = [];
     foreach ($sensors as $sensor) {
       $data['moisture'][] = $sensor->moisture;
@@ -53,6 +53,7 @@ class DeviceController extends Controller
       'water_level' => 'required',
       'motor_status' => 'required',
     ], ['a' => "Please Provide data"]);
+    // return $request;
     if ($validator->fails()) {
 
       return response()->json(['message' => "Please provide required data"]);
@@ -65,6 +66,9 @@ class DeviceController extends Controller
       'water_level' => $request->water_level,
       'motor_status' => $request->motor_status,
     ]);
+    // $device->update([
+    //   'motor_status' => $request->motor_status == 0? 'auto':'',
+    // ]);
     return response()->json(["message" => "Added"]);
   }
 
@@ -72,7 +76,7 @@ class DeviceController extends Controller
   {
     $setting = $device->setting()->get();
     $data = SettingResource::collection($setting)->response()->getData(true);
-    return response()->json($data, 200);
+    return response($data);
   }
 
   public function updateSetting(Request $request, Device $device)
@@ -86,6 +90,12 @@ class DeviceController extends Controller
   {
 
     $device->update(['motor_status' => $request->json('motor_status')]);
+    return response()->json($device->motor_status, 200);
+  }
+  public function toggleMode(Request $request, Device $device)
+  {
+
+    $device->setting()->update(['control_mode' => $request->json('control_mode')]);
     return response()->json($device->motor_status, 200);
   }
 }
